@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <title></title>
+        <script src="./javascript/jquery-1.12.3.min.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <style media="screen">
+            html{
+                font-size:20px;
+            }
+            *{
+                padding: 0;
+                margin: 0;
+            }
+            .plate{
+                width: 38rem;
+                height: 38rem;
+                margin: auto;
+                background: rgba(0,0,0,1);
+                position: relative;
+                z-index: 0;
+                user-select: none;
+            }
+
+            .plate .progress-bar{
+                width: 14.1rem;
+                height: 28.2rem;
+                top: 3.4rem;
+                position: absolute;
+                border-style: solid;
+                border-color: #f49313;
+            }
+
+            .plate .mask{
+                width: 14.1rem;
+                height: 28.2rem;
+                top: 3.4rem;
+                position: absolute;
+                border-color: #F1F1F1;
+                border-style: solid;
+            }
+
+            .plate .circle-left{
+                left: 3.4rem;
+                border-top-width: 1.5rem;
+                border-bottom-width: 1.5rem;
+                border-left-width: 1.5rem;
+                border-right-width: 0;
+                border-top-left-radius: 28.2rem;
+                border-bottom-left-radius: 28.2rem;
+                transform-origin: right center;
+            }
+
+            .plate .circle-right{
+                right: 3.4rem;
+                border-top-width: 1.5rem;
+                border-bottom-width: 1.5rem;
+                border-right-width: 1.5rem;
+                border-left-width: 0px;
+                border-top-right-radius: 28.2rem;
+                border-bottom-right-radius: 28.2rem;
+                transform-origin: left center;
+            }
+
+            .plate .chamfer{
+                width: 0.95rem;
+                height: 1.8rem;
+                position: absolute;
+                top: 3.25rem;
+                left: 18.9rem;
+                background: radial-gradient(circle 0.9rem at right center, transparent 65%, #F1F1F1 100%);
+                z-index: 5;
+            }
+
+            .plate .outside-hoop{
+                width: 31.2rem;
+                height: 31.2rem;
+                border: 3.4rem solid #fff;
+                border-radius: 50%;
+                position: absolute;
+                z-index: 6;
+            }
+
+            .plate .inside-circle{
+                width: 28.2rem;
+                height: 28.2rem;
+                position: absolute;
+                border-radius: 50%;
+                top: 4.9rem;
+                left: 4.9rem;
+                z-index: 6;
+                background: #fff;
+            }
+
+            .plate .rail{
+                width: 27.2rem;
+                height: 27.2rem;
+                border-radius: 50%;
+                /*border: 2.5rem solid rgba(117, 55, 159, 0.5);*/
+                border: 2.5rem solid transparent;
+                position: absolute;
+                top: 2.9rem;
+                left: 2.9rem;
+                z-index: 7;
+            }
+
+            .plate .forbidden-area{
+                width: 13.6rem;
+                height: 13.6rem;
+                /*border-top: 2.5rem solid rgba(31, 121, 81, 0.5);*/
+                /*border-left: 2.5rem solid rgba(31, 121, 81, 0.5);*/
+                border-top: 2.5rem solid transparent;
+                border-left: 2.5rem solid transparent;
+                position: absolute;
+                top: 2.9rem;
+                left: 2.9rem;
+                border-top-left-radius: 100%;
+                z-index: 8;
+            }
+
+            .plate .enclosure{
+                text-align: center;
+                line-height: 27.2rem;
+                font-size: 2.5rem;
+                width: 27.2rem;
+                height: 27.2rem;
+                border-radius: 50%;
+                position: absolute;
+                top: 5.4rem;
+                left: 5.4rem;
+                z-index: 9;
+                /*background: rgb(143, 27, 18);*/
+            }
+
+            .plate .cursor{
+                width: 3.2rem;
+                height: 3.2rem;
+                border-radius: 50%;
+                border: 0.9rem solid rgba(251, 203, 1, 0.5);
+                position: absolute;
+                z-index: 10;
+                top: 1.65rem;
+                left: 16.5rem;
+                background: rgba(251, 203, 1, 0.5);
+                transform-origin: center 17.35rem;
+            }
+
+            .plate .cursor .cursor-body{
+                width: 3.2rem;
+                height: 3.2rem;
+                position: absolute;
+                border-radius: 50%;
+                top:0;
+                left:0;
+                background: #FBCB01;
+            }
+
+            .plate .cursor .cursor-body .cursor-hat{
+                width: 1.2rem;
+                height: 1.2rem;
+                position: absolute;
+                border-radius: 50%;
+                top:1rem;
+                left:1rem;
+                background: #fff;
+            }
+
+            .z-i-1{
+                z-index: 1;
+            }
+            .z-i-2{
+                z-index: 2;
+            }
+            .z-i-3{
+                z-index: 3;
+            }
+            .z-i-4{
+                z-index: 4;
+            }
+        </style>
+        <div id="plate" class="plate">
+            <div class="progress-bar circle-left z-i-3" id="progress-left"></div>
+            <div class="progress-bar circle-right z-i-1" id="progress-right"></div>
+            <div class="mask circle-left z-i-4" id="mask-left"></div>
+            <div class="mask circle-right z-i-2" id="mask-right"></div>
+            <div class="chamfer"></div>
+            <div class="outside-hoop"></div>
+            <div class="inside-circle"></div>
+            <div class="rail" id="rail"></div>
+            <div class="forbidden-area" id="forbidden-area"></div>
+            <div class="enclosure" id="enclosure"></div>
+            <div class="cursor" id="cursor">
+                <div class="cursor-body">
+                    <div class="cursor-hat"></div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var plate = new plate({
+                money:{
+                    current: 500,
+                    max: 1000
+                }
+            });
+            plate.init();
+            function plate(json) {
+                var thisDom           = null;    //当前构造器
+                this.plateDom         = null;    //圆环进度器
+                this.railDom          = null;    //轨道
+                this.progressLeftDom  = null;    //左进度条
+                this.progressRightDom = null;    //右进度条
+                this.maskLeftDom      = null;    //左遮罩层
+                this.maskRightDom     = null;    //右遮罩层
+                this.cursorDom        = null;    //游标
+                this.forbiddenAreaDom = null;    //不允许滑动的禁区
+                this.enclosureDom     = null;    //文字显示区
+                this.center           = null;    //圆盘中心点
+                this.mark             = null;    //是否允许滑动
+                this.money            = null;    //需要显示的数字
+                this.step             = null;    //步长
+                this.deg              = null;    //滑动的角度
+                this.init             = function () {            //初始化
+                    this.initDom();
+                    this.initParam();
+                    this.initAction();
+                    this.initEvent();
+                };
+                this.initDom          = function () {            //初始化Dom
+                    this.plateDom         = $("#plate");
+                    this.railDom          = $("#rail");
+                    this.progressLeftDom  = $("#progress-left");
+                    this.progressRightDom = $("#progress-right");
+                    this.maskLeftDom      = $("#mask-left");
+                    this.maskRightDom     = $("#mask-right");
+                    this.cursorDom        = $("#cursor");
+                    this.forbiddenAreaDom = $("#forbidden-area");
+                    this.enclosureDom     = $("#enclosure");
+                };
+                this.initParam        = function () {            //初始化常用数
+                    var plateOffset = this.plateDom.offset();
+                    var plateWidth  = this.plateDom.width() * 1;
+                    var plateHeight = this.plateDom.height() * 1;
+                    this.center     = {
+                        X : plateOffset.left * 1 + plateWidth * 0.5,    //中心点 x
+                        Y : plateOffset.top * 1 +  plateHeight * 0.5    //中心点 y
+                    };
+                    this.money      = {
+                        current: json.money.current,                //当前的钱
+                        max:     json.money.max                     //最大的钱数
+                    };
+                    this.deg        = {
+                        current: 0,                                //当前游标旋转角度
+                        appoint: Math.floor((this.money.current / this.money.max) * 270) //当前金额对应角度
+                    };
+                    this.step       = this.money.max / 270;        //步长
+                    thisDom         = this;
+                };
+                this.initEvent        = function () {            //初始化事件
+                    this.cursorDom.on("mousedown", this.moveStart);            //游标活动
+                    this.forbiddenAreaDom.one("mouseenter", this.moveEnd);     //禁区移除游标事件
+                    this.enclosureDom.one("mouseenter", this.moveEnd);         //文字显示区移除游标事件
+                };
+                this.initAction       = function () {            //初始化动画
+                    this.animate();                              //自动滑动到某位置
+                };
+                this.moveStart        = function (event) {       //移动开始函数
+                    var e        = event || window.event;
+                    e.stopPropagation();
+                    thisDom.mark = true;
+                    thisDom.railDom.on("mousemove", thisDom.moving);    //轨道绑定移动事件
+                    thisDom.cursorDom.on("mousemove", thisDom.moving);  //游标绑定移动事件
+                    $(document).one("mouseup", thisDom.moveEnd);        //鼠标抬起解除移动
+                };
+                this.moving           = function (event) {       //移动中函数
+                    if (thisDom.mark) {
+                        var e       = event || window.event;
+                        e.stopPropagation();
+                        var finaldX = e.pageX - thisDom.center.X;        //鼠标关于中心点的坐标 x
+                        var finaldY = thisDom.center.Y - e.pageY;        //鼠标关于中心点的坐标 y
+                        var deg     = 90 - Math.floor(Math.atan2(finaldY, finaldX) * 180 / Math.PI);    //鼠标与 y 轴夹角
+                        thisDom.setRotate(deg);    //设置游标 进度条 位置
+                    }
+                };
+                this.moveEnd          = function (event) {       //移动结束函数
+                    var e        = event || window.event;
+                    e.stopPropagation();
+                    thisDom.railDom.unbind("mousemove", thisDom.moving);        //轨道解除移动事件
+                    thisDom.cursorDom.unbind("mousemove", thisDom.moving);      //游标解除移动事件
+                    thisDom.mark = false;
+                };
+                this.animate          = function () {            //动画
+                    thisDom.setRotate(thisDom.deg.current += 1);        //设置游标 进度条 位置
+                    if (thisDom.deg.current < thisDom.deg.appoint) {    //没有指定到位置
+                        setTimeout(thisDom.animate, 30);                //递归  渲染
+                    }
+                    else {
+                        thisDom.enclosureDom.html(thisDom.money.current);    //展示当前的数字
+                    }
+                };
+                this.setRotate        = function (deg) {         //设置游标 进度条 位置
+                    if (deg > 0 && deg <= 180) {            // 右半区 进度效果显示
+                        this.maskLeftDom.css("z-index", 4);                //左遮罩层层级
+                        this.progressLeftDom.css("transform", "rotate(" + deg + "deg)");    //左进度条位置
+                        this.progressRightDom.css("transform", "rotate(0deg)");            //右进度条位置
+                        this.enclosureDom.html(Math.floor(deg * this.step));                //数字显示
+                        this.cursorDom.css("transform", "rotate(" + deg + "deg)");        //游标位置
+                    }
+                    else if (deg <= 270 && deg > 180) {        // 左下区 进度效果显示
+                        this.maskLeftDom.css("z-index", 0);        //左遮罩层层级
+                        this.progressLeftDom.css("transform", "rotate(180deg)");    //左进度条位置
+                        this.progressRightDom.css("transform", "rotate(" + (deg - 180) + "deg)");    //右进度条位置
+                        this.enclosureDom.html(Math.floor(deg * this.step));    //数字显示
+                        this.cursorDom.css("transform", "rotate(" + deg + "deg)");    //游标位置
+                    }
+                    else if (deg < 0) {        //鼠标位于禁区
+                        this.railDom.unbind("mousemove", this.moving);         //解除移动
+                        this.cursorDom.unbind("mousemove", this.moving);        //解除移动
+                        var leftDeg  = this.progressLeftDom.attr("style").split("(")[1].split("deg")[0] * 1;    //左进度条旋转角度
+                        var rightDeg = this.progressRightDom.attr("style").split("(")[1].split("deg")[0] * 1;    //右进度条旋转角度
+                        if (rightDeg === 90) {        //最大旋转
+                            this.cursorDom.css("transform", "rotate(270deg)");
+                        }
+                        else if (leftDeg === 0) {    //最小旋转
+                            this.cursorDom.css("transform", "rotate(0deg)");
+                        }
+                    }
+                };
+            }
+        </script>
+    </body>
+</html>
