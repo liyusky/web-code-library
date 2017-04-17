@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    	<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    	<meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    	<meta name="apple-mobile-web-app-capable" content="yes">
+    	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <title></title>
+        <link rel="stylesheet" href="./css/api.css">
+        <link rel="stylesheet" href="./css/aui.css">
+        <link rel="stylesheet" href="./css/plate.css">
+        <script src="./javascript/api.js" charset="utf-8"></script>
+        <script src="./javascript/plate.js" charset="utf-8"></script>
+    </head>
+    <body style="background: #fff;">
+
+        <section class="aui-content" style="background: #3991E5; padding: 0.25rem 0 0.25rem 0;">
+            <div id="plate" class="plate">
+                <div class="progress-bar circle-left z-i-3" id="progress-left"></div>
+                <div class="progress-bar circle-right z-i-1" id="progress-right"></div>
+                <div class="mask circle-left z-i-4" id="mask-left"></div>
+                <div class="mask circle-right z-i-2" id="mask-right"></div>
+                <div class="chamfer"></div>
+                <div class="outside-hoop"></div>
+                <div class="inside-circle" id="inside-circle">
+                    <p></p>
+                    <p><span id="current-money">500</span></p>
+                </div>
+                <div class="cursor" id="cursor">
+                    <div class="cursor-base"></div>
+                    <div class="cursor-body"></div>
+                    <div class="cursor-hat"></div>
+                </div>
+            </div>
+        </section>
+        <!-- <section class="aui-grid" style="background: #3991E5;">
+            <div class="aui-row">
+                <div class="aui-col-xs-4"></div>
+                <div class="aui-col-xs-6">
+                    <div id="plate" class="plate">
+                        <div class="progress-bar circle-left z-i-3" id="progress-left"></div>
+                        <div class="progress-bar circle-right z-i-1" id="progress-right"></div>
+                        <div class="mask circle-left z-i-4" id="mask-left"></div>
+                        <div class="mask circle-right z-i-2" id="mask-right"></div>
+                        <div class="chamfer"></div>
+                        <div class="outside-hoop"></div>
+                        <div class="inside-circle" id="inside-circle">
+                            <p></p>
+                            <p><span id="current-money">500</span></p>
+                        </div>
+                        <div class="cursor" id="cursor">
+                            <div class="cursor-base"></div>
+                            <div class="cursor-body"></div>
+                            <div class="cursor-hat"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+
+        <script type="text/javascript">
+            var p = new plate({
+                size: {
+                    num: 10,
+                    // symbol: "rem"
+                },
+                money:{
+                    current: 500,
+                    whole: [500, 700, 1000, 1500, 2000, 3000]
+                }
+            });
+            p.init();
+        </script>
+    </body>
+</html>
